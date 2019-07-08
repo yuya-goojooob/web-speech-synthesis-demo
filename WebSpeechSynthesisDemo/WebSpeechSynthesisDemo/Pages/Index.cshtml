@@ -8,24 +8,28 @@
     var voices = speechSynthesis.getVoices();
 
     function speak() {
-        var speechText = document.getElementById('speech-text').value;
-        var uttr = new SpeechSynthesisUtterance();
+        try {
+            var speechText = document.getElementById('speech-text').value;
+            var uttr = new SpeechSynthesisUtterance();
 
-        if (!voices || !voices.length) {
-            voices = speechSynthesis.getVoices();
+            if (!voices || !voices.length) {
+                voices = speechSynthesis.getVoices();
+            }
+
+            var voice = voices.find(_ => _.lang === 'ja-JP');
+            uttr.voice = voice;
+
+            uttr.volume = document.getElementById('speech-volume').value; // 音量 min 0 ~ max 1
+            uttr.rate = document.getElementById('speech-rate').value; // 速度 min 0 ~ max 10 (3.6を越えるとちゃんと動かない。。。)
+            uttr.pitch = document.getElementById('speech-pitch').value; // 音程 min 0 ~ max 2
+            uttr.lang = 'ja-JP';
+            uttr.text = speechText;
+
+            speechSynthesis.cancel();
+            speechSynthesis.speak(uttr);
+        } catch (e) {
+             alert(e);
         }
-
-        var voice = voices.find(_ => _.lang === 'ja-JP');
-        uttr.voice = voice;
-
-        uttr.volume = document.getElementById('speech-volume').value; // 音量 min 0 ~ max 1
-        uttr.rate = document.getElementById('speech-rate').value; // 速度 min 0 ~ max 10 (3.6を越えるとちゃんと動かない。。。)
-        uttr.pitch = document.getElementById('speech-pitch').value; // 音程 min 0 ~ max 2
-        uttr.lang = 'ja-JP';
-        uttr.text = speechText;
-
-        speechSynthesis.cancel();
-        speechSynthesis.speak(uttr);
     }
 </script>
 <div class="text-center">
